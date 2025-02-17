@@ -46,7 +46,7 @@ header {
   text-align: center;
   box-shadow: 0 2px 5px var(--shadow-color);
   position: relative;
-  background-image: url('play_minicraft_header___media_library_original_1920_480.png');
+  background-image: url('header.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

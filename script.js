@@ -83,6 +83,68 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Create thank you popup
+  const popupHTML = `
+    <div id="thank-you-popup" class="popup-overlay">
+      <div class="popup-content">
+        <h2>Thank You!</h2>
+        <p>Your download should begin automatically. We hope you enjoy your Minicraft adventure!</p>
+        <h3>Join Our Community!</h3>
+        <p>Connect with other players, share your experiences, and get help when needed.</p>
+        <a href="https://discord.gg/mJFRZXy9BK" class="discord-button" target="_blank">
+          Join Discord Server
+        </a>
+        <div class="tips">
+          <h4>Quick Tips:</h4>
+          <ul>
+            <li>Use WASD or arrow keys to move</li>
+            <li>Space/X to attack</li>
+            <li>C to open inventory</li>
+            <li>Press ESC for menu</li>
+          </ul>
+        </div>
+        <button class="close-popup">Close</button>
+      </div>
+    </div>
+  `;
+
+  // Add popup to body
+  document.body.insertAdjacentHTML('beforeend', popupHTML);
+
+  const popup = document.getElementById('thank-you-popup');
+  const closeButton = document.querySelector('.close-popup');
+
+  // Close popup on button click or clicking outside
+  closeButton.addEventListener('click', () => {
+    popup.style.display = 'none';
+  });
+
+  popup.addEventListener('click', (e) => {
+    if (e.target === popup) {
+      popup.style.display = 'none';
+    }
+  });
+
+  // Function to show popup and start download
+  function showThankYouAndDownload(downloadUrl) {
+    popup.style.display = 'flex';
+    // Start download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = '';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // Add click handlers to all download buttons
+  document.querySelectorAll('.edition-button, .dev-builds a').forEach(button => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      showThankYouAndDownload(button.href);
+    });
+  });
+
   async function updateMinicraftPlusLink() {
     try {
       // Get latest release
@@ -143,7 +205,15 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadLink.href = 'https://github.com/MinicraftPlus/minicraft-plus-revived/releases/download/v2.3.0-dev1/minicraft-plus-2.3.0-dev1.jar';
       }
     }
-  }
+    
+    // Add click handlers to newly added dev build links
+    document.querySelectorAll('.dev-builds a').forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.preventDefault();
+        showThankYouAndDownload(button.href);
+      });
+    });
+  };
 
   // Check for new release when page loads
   updateMinicraftPlusLink();

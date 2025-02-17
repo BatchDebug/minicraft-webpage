@@ -327,6 +327,50 @@ footer {
   50% { text-shadow: 0 0 20px var(--primary-color); }
 }
 
+.version-info {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.7rem;
+  color: var(--accent-color);
+  margin: 1rem 0;
+  padding: 0.8rem;
+  border-radius: 4px;
+  background: var(--background-color);
+  display: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dev-builds {
+  font-size: 0.6rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  color: #4a9eff;
+  font-family: 'Press Start 2P', cursive;
+  text-align: center;
+}
+
+.dev-builds a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.3s;
+  display: inline-block;
+  padding: 0.3rem 0.5rem;
+}
+
+.dev-builds a:hover {
+  opacity: 0.8;
+}
+
+.dev-builds span {
+  margin: 0 1rem;
+  color: var(--text-color);
+  opacity: 0.5;
+}
+
 @media (max-width: 968px) {
   .editions-grid,
   .download-options {

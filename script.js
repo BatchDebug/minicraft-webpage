@@ -82,4 +82,72 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  async function updateMinicraftPlusLink() {
+    try {
+      // Get latest release
+      const releaseResponse = await fetch('https://api.github.com/repos/MinicraftPlus/minicraft-plus-revived/releases/latest');
+      const releaseData = await releaseResponse.json();
+      
+      // Get pre-releases
+      const preReleasesResponse = await fetch('https://api.github.com/repos/MinicraftPlus/minicraft-plus-revived/releases');
+      const allReleases = await preReleasesResponse.json();
+      
+      const downloadLink = document.querySelector('[data-edition="plus"]');
+      const editionDiv = downloadLink?.closest('.edition');
+      
+      if (downloadLink && editionDiv) {
+        if (releaseData.assets && releaseData.assets.length > 0) {
+          const jarAsset = releaseData.assets.find(asset => asset.name.endsWith('.jar'));
+          if (jarAsset) {
+            downloadLink.href = jarAsset.browser_download_url;
+            
+            // Update version information
+            let versionInfo = editionDiv.querySelector('.version-info');
+            if (!versionInfo) {
+              versionInfo = document.createElement('div');
+              versionInfo.className = 'version-info';
+              editionDiv.insertBefore(versionInfo, editionDiv.querySelector('.button-container'));
+            }
+            versionInfo.textContent = `Latest Stable Version: ${releaseData.tag_name}`;
+            versionInfo.style.display = 'block';
+            
+            // Add dev build links
+            let devBuilds = editionDiv.querySelector('.dev-builds');
+            if (!devBuilds) {
+              devBuilds = document.createElement('div');
+              devBuilds.className = 'dev-builds';
+              editionDiv.insertBefore(devBuilds, editionDiv.querySelector('.button-container'));
+            }
+            
+            // Find latest pre-release and nightly
+            const preRelease = allReleases.find(release => release.prerelease);
+            const nightly = allReleases.find(release => release.tag_name.toLowerCase().includes('nightly'));
+            
+            const preReleaseLink = preRelease?.assets?.find(asset => asset.name.endsWith('.jar'))?.browser_download_url;
+            const nightlyLink = nightly?.assets?.find(asset => asset.name.endsWith('.jar'))?.browser_download_url;
+            
+            devBuilds.innerHTML = `
+              ${preReleaseLink ? `<a href="${preReleaseLink}">Download latest Dev Build</a>` : ''}
+              ${preReleaseLink && nightlyLink ? '<span>|</span>' : ''}
+              ${nightlyLink ? `<a href="${nightlyLink}">Download latest Nightly Build</a>` : ''}
+            `;
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching Minicraft+ releases:', error);
+      // Fallback to hardcoded link if API fails
+      const downloadLink = document.querySelector('[data-edition="plus"]');
+      if (downloadLink) {
+        downloadLink.href = 'https://github.com/MinicraftPlus/minicraft-plus-revived/releases/download/v2.3.0-dev1/minicraft-plus-2.3.0-dev1.jar';
+      }
+    }
+  }
+
+  // Check for new release when page loads
+  updateMinicraftPlusLink();
+
+  // Check for new release every 5 minutes
+  setInterval(updateMinicraftPlusLink, 300000);
 });

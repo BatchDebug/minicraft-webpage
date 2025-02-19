@@ -1,3 +1,3 @@
 ## Minicraft Website  
 
-Now found [here](https://github.com/MinicraftPlus/MinicraftPlus.github.io)
+Repo is now [here](https://github.com/MinicraftPlus/MinicraftPlus.github.io).
